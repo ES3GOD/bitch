@@ -12,7 +12,8 @@ import string
 from ast import ExceptHandler
 
 from pyrogram import filters
-from pyrogram.types import (InlineKeyboardMarkup, InputMediaPhoto,
+from YukkiMusic.utils.database import is_served_user
+from pyrogram.types import (InlineKeyboardMarkup, InlineKeyboardButton, InputMediaPhoto,
                             Message)
 from pytgcalls.exceptions import NoActiveGroupCall
 
@@ -57,6 +58,21 @@ async def play_commnd(
     url,
     fplay,
 ):
+      if not await is_served_user(message.from_user.id):
+        await message.reply_text(
+            text="Error, You're Not A Verified User.\nPlease Click aon The Below Button To Verify Yourself.",
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="Click Here To Verify 🚀",
+                            url=f"https://t.me/{app.username}?start=verify",
+                        )
+                    ]
+                ]
+            ),
+        )
+        return
     mystic = await message.reply_text(
         _["play_2"].format(channel) if channel else _["play_1"]
     )
